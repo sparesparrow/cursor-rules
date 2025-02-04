@@ -1,0 +1,122 @@
+---
+description: Resource and Tool interaction flows in Model Context Protocol
+---
+
+# MCP Resource and Tool Flows
+
+## Resource Management Flow
+
+```mermaid
+flowchart TD
+    subgraph Client ["Client Side"]
+        RC[Resource Client]
+        RH[Resource Handler]
+        Cache[Resource Cache]
+        Stream[Resource Streamer]
+    end
+
+    subgraph Server ["Server Side"]
+        RM[Resource Manager]
+        RS[Resource Store]
+        RV[Resource Validator]
+    end
+
+    RC -->|1. Request Resource| RH
+    RH -->|2. Check Cache| Cache
+    Cache -->|3a. Cache Hit| RH
+    Cache -->|3b. Cache Miss| RC
+    RC -->|4. Fetch Resource| RM
+    RM -->|5. Validate| RV
+    RM -->|6. Store| RS
+    RM -->|7. Return| RC
+    RC -->|8. Update Cache| Cache
+    RC -->|9. Setup Stream| Stream
+    Stream -->|10. Watch Changes| RM
+```
+
+## Tool Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant TH as Tool Handler
+    participant TV as Tool Validator
+    participant TE as Tool Executor
+    participant R as Resources
+
+    C->>TH: Execute Tool
+    TH->>TV: Validate Arguments
+    
+    alt Invalid Arguments
+        TV-->>TH: Validation Error
+        TH-->>C: Error Response
+    else Valid Arguments
+        TV-->>TH: Arguments OK
+        TH->>TE: Execute Tool
+        TE->>R: Access Resources
+        R-->>TE: Resource Data
+        TE-->>TH: Execution Result
+        TH-->>C: Success Response
+    end
+```
+
+## Resource Content Types
+
+```mermaid
+classDiagram
+    class ResourceContent {
+        +uri: string
+        +mimeType: string
+        +content: any
+    }
+
+    class TextContent {
+        +text: string
+        +encoding: string
+    }
+
+    class BinaryContent {
+        +blob: Uint8Array
+        +encoding: string
+    }
+
+    class JSONContent {
+        +json: object
+        +schema: JSONSchema
+    }
+
+    class StreamContent {
+        +stream: ReadableStream
+        +chunkSize: number
+    }
+
+    ResourceContent <|-- TextContent
+    ResourceContent <|-- BinaryContent
+    ResourceContent <|-- JSONContent
+    ResourceContent <|-- StreamContent
+```
+
+## Tool Categories
+
+```mermaid
+mindmap
+    root((MCP Tools))
+        Resource Tools
+            List Resources
+            Read Resource
+            Write Resource
+            Watch Resource
+        System Tools
+            Execute Command
+            Read File
+            Write File
+            List Directory
+        Integration Tools
+            Connect Server
+            Manage Cache
+            Stream Data
+        Utility Tools
+            Validate Schema
+            Transform Data
+            Parse Content
+``` 

@@ -1,0 +1,92 @@
+---
+description: Core concepts and interfaces in Model Context Protocol
+---
+
+# MCP Core Concepts
+
+## Interface Relationships
+
+```mermaid
+classDiagram
+    class Client {
+        +name: string
+        +version: string
+        +capabilities: Capabilities
+        +connect(transport: Transport)
+        +request(method: string, params: any)
+        +notify(method: string, params: any)
+    }
+
+    class Transport {
+        <<interface>>
+        +connect()
+        +disconnect()
+        +send(message: Message)
+        +onMessage(handler: Function)
+        +onError(handler: Function)
+        +onClose(handler: Function)
+    }
+
+    class Resource {
+        +uri: string
+        +name: string
+        +description: string
+        +mimeType: string
+        +read()
+        +write(content: any)
+        +watch(callback: Function)
+    }
+
+    class Tool {
+        +name: string
+        +description: string
+        +inputSchema: JSONSchema
+        +execute(args: any)
+        +validate(args: any)
+    }
+
+    class Prompt {
+        +name: string
+        +description: string
+        +arguments: PromptArg[]
+        +generate(args: any)
+        +chain(steps: PromptStep[])
+    }
+
+    Client --> Transport : uses
+    Client --> Resource : manages
+    Client --> Tool : executes
+    Client --> Prompt : generates
+```
+
+## Message Flow
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant T as Transport
+    participant S as Server
+
+    Note over C,S: Request/Response Pattern
+    C->>+T: request(method, params)
+    T->>+S: {jsonrpc: "2.0", method, params, id}
+    S-->>-T: {jsonrpc: "2.0", result, id}
+    T-->>-C: result
+
+    Note over C,S: Notification Pattern
+    C->>T: notify(method, params)
+    T->>S: {jsonrpc: "2.0", method, params}
+```
+
+## Capability Negotiation
+
+```mermaid
+stateDiagram-v2
+    [*] --> Connecting
+    Connecting --> Negotiating: Send Capabilities
+    Negotiating --> Connected: Capabilities Accepted
+    Negotiating --> Failed: Capabilities Rejected
+    Connected --> Ready: Initialize
+    Ready --> [*]: Disconnect
+    Failed --> [*]: Disconnect
+``` 

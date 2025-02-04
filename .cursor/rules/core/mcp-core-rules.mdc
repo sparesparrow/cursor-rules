@@ -1,0 +1,167 @@
+---
+description: Core implementation rules and guidelines for Model Context Protocol
+globs: ["src/mcp/**/*.ts"]
+---
+
+# MCP Core Implementation Rules
+
+## Client Implementation
+
+### Basic Client Setup
+```typescript
+interface MCPClientConfig {
+  name: string;                 // Client identifier
+  version: string;             // Client version
+  capabilities?: Capabilities; // Optional capabilities
+}
+
+class MCPClient {
+  constructor(config: MCPClientConfig) {
+    this.validateConfig(config);
+    this.setupCapabilities(config.capabilities);
+    this.initializeHandlers();
+  }
+
+  private validateConfig(config: MCPClientConfig): void {
+    if (!config.name || !config.version) {
+      throw new Error('Client name and version are required');
+    }
+  }
+}
+```
+
+### Connection Management
+```typescript
+interface ConnectionOptions {
+  timeout?: number;
+  retryPolicy?: RetryPolicy;
+  onError?: (error: Error) => void;
+}
+
+class ConnectionManager {
+  async connect(transport: Transport, options?: ConnectionOptions): Promise<void> {
+    try {
+      await this.negotiateCapabilities();
+      await this.initializeConnection();
+      this.setupHeartbeat();
+    } catch (error) {
+      this.handleConnectionError(error);
+    }
+  }
+
+  private async negotiateCapabilities(): Promise<void> {
+    // Send capabilities and wait for server response
+    const serverCapabilities = await this.sendCapabilities();
+    this.validateCompatibility(serverCapabilities);
+  }
+}
+```
+
+## Transport Implementation
+
+### Transport Interface
+```typescript
+interface Transport {
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  send(message: Message): Promise<void>;
+  onMessage(handler: (message: Message) => void): void;
+  onError(handler: (error: Error) => void): void;
+  onClose(handler: () => void): void;
+}
+```
+
+### Message Format
+```typescript
+interface Message {
+  jsonrpc: "2.0";
+  id?: string | number;
+  method?: string;
+  params?: unknown;
+  result?: unknown;
+  error?: {
+    code: number;
+    message: string;
+    data?: unknown;
+  };
+}
+```
+
+## Error Handling
+
+### Error Categories
+```typescript
+enum MCPErrorCode {
+  ParseError = -32700,
+  InvalidRequest = -32600,
+  MethodNotFound = -32601,
+  InvalidParams = -32602,
+  InternalError = -32603,
+  TransportError = -32000,
+  CapabilityError = -32001,
+  ResourceError = -32002,
+  ToolError = -32003
+}
+
+class MCPError extends Error {
+  constructor(
+    public code: MCPErrorCode,
+    message: string,
+    public data?: unknown
+  ) {
+    super(message);
+  }
+}
+```
+
+### Error Handling Guidelines
+
+1. **Transport Errors**
+   - Always implement timeout handling
+   - Use exponential backoff for retries
+   - Maintain connection state
+
+2. **Protocol Errors**
+   - Validate message format
+   - Check JSON-RPC version
+   - Verify method existence
+
+3. **Application Errors**
+   - Provide detailed error messages
+   - Include relevant context
+   - Log errors appropriately
+
+## Best Practices
+
+1. **Resource Management**
+   - Use consistent URI patterns
+   - Implement proper cleanup
+   - Handle resource lifecycle
+
+2. **Message Handling**
+   - Validate message format
+   - Use proper typing
+   - Handle all message types
+
+3. **Security**
+   - Validate all inputs
+   - Sanitize resource paths
+   - Use secure transport
+
+4. **Performance**
+   - Implement caching
+   - Use streaming when appropriate
+   - Batch requests when possible
+
+## Implementation Checklist
+
+- [ ] Basic client setup
+- [ ] Transport implementation
+- [ ] Error handling
+- [ ] Resource management
+- [ ] Tool support
+- [ ] Prompt handling
+- [ ] Security measures
+- [ ] Performance optimization
+- [ ] Testing strategy
+- [ ] Documentation 

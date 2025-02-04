@@ -1,0 +1,138 @@
+---
+description: Integration patterns and advanced features in Model Context Protocol
+---
+
+# MCP Integration Patterns
+
+## Multi-Server Architecture
+
+```mermaid
+graph TB
+    subgraph Client ["Client Application"]
+        MC[Main Client]
+        SM[Server Manager]
+        CH[Capability Handler]
+    end
+
+    subgraph Servers ["MCP Servers"]
+        S1[Server 1]
+        S2[Server 2]
+        S3[Server 3]
+    end
+
+    subgraph Integration ["Integration Layer"]
+        AG[Aggregator]
+        RR[Request Router]
+        LB[Load Balancer]
+    end
+
+    MC --> SM
+    SM --> CH
+    CH --> RR
+    RR --> AG
+    AG --> S1
+    AG --> S2
+    AG --> S3
+    
+    LB --> S1
+    LB --> S2
+    LB --> S3
+
+    style Client fill:#e1f3d8
+    style Servers fill:#ffd7d7
+    style Integration fill:#d7e3ff
+```
+
+## Advanced Resource Patterns
+
+```mermaid
+stateDiagram-v2
+    [*] --> ResourceRequested
+    
+    state ResourceManagement {
+        ResourceRequested --> CacheCheck
+        CacheCheck --> CacheHit
+        CacheCheck --> CacheMiss
+        
+        state CacheHit {
+            [*] --> ValidateCache
+            ValidateCache --> ServeFromCache
+            ValidateCache --> RefreshCache
+            ServeFromCache --> [*]
+            RefreshCache --> FetchResource
+        }
+        
+        state CacheMiss {
+            [*] --> FetchResource
+            FetchResource --> ValidateResource
+            ValidateResource --> StoreInCache
+            StoreInCache --> [*]
+        }
+    }
+    
+    ResourceManagement --> StreamSetup
+    StreamSetup --> [*]
+```
+
+## Prompt Chain Execution
+
+```mermaid
+flowchart TD
+    subgraph Chain ["Prompt Chain"]
+        P1[Prompt 1]
+        P2[Prompt 2]
+        P3[Prompt 3]
+    end
+
+    subgraph Context ["Context Management"]
+        IC[Initial Context]
+        SC[Step Context]
+        FC[Final Context]
+    end
+
+    subgraph Tools ["Tool Integration"]
+        T1[Tool 1]
+        T2[Tool 2]
+        T3[Tool 3]
+    end
+
+    IC --> P1
+    P1 --> T1
+    T1 --> SC
+    SC --> P2
+    P2 --> T2
+    T2 --> SC
+    SC --> P3
+    P3 --> T3
+    T3 --> FC
+```
+
+## Error Handling Patterns
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant EH as Error Handler
+    participant R as Retry Manager
+    participant B as Backoff Manager
+    participant S as Server
+
+    C->>S: Request
+    
+    alt Server Error
+        S-->>EH: 5xx Error
+        EH->>R: Should Retry?
+        R->>B: Calculate Backoff
+        B-->>R: Wait Time
+        R->>S: Retry Request
+    else Client Error
+        S-->>EH: 4xx Error
+        EH->>C: Handle Client Error
+    else Timeout
+        S-->>EH: Timeout
+        EH->>R: Should Retry?
+        R->>B: Calculate Backoff
+        B-->>R: Wait Time
+        R->>S: Retry Request
+    end
+``` 
