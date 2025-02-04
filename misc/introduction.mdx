@@ -1,0 +1,94 @@
+---
+title: "Introduction"
+description: "Introduction to the Model Context Protocol (MCP)"
+---
+
+# Model Context Protocol
+
+The Model Context Protocol (MCP) is a standardized protocol for enabling seamless communication between Large Language Models (LLMs) and their surrounding context. This protocol allows LLMs to interact with external tools, access contextual information, and maintain structured conversations.
+
+## What is MCP?
+
+MCP provides:
+
+- **Standardized Communication**: A unified way for LLMs to interact with external systems
+- **Context Management**: Structured handling of contextual information
+- **Tool Integration**: Standardized function calling and tool usage
+- **Resource Control**: Efficient management of computational resources
+- **Security**: Built-in security measures for safe LLM interactions
+
+## Key Features
+
+### 1. Protocol-First Design
+
+MCP is built on a protocol-first philosophy:
+
+- Clear message specifications
+- Versioned protocol definitions
+- Backward compatibility support
+- Extensible design patterns
+
+### 2. Context Awareness
+
+Built-in support for:
+
+- File system access
+- Environment variables
+- Configuration management
+- State persistence
+
+### 3. Tool Integration
+
+Seamless integration with:
+
+- External APIs
+- Local functions
+- System commands
+- Custom tools
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16.0 or later
+- TypeScript 4.5 or later
+- Basic understanding of LLMs
+
+### Quick Start
+
+1. **Installation**
+
+```bash
+npm install @mcp/core @mcp/client
+# or
+yarn add @mcp/core @mcp/client
+```
+
+2. **Basic Setup**
+
+```typescript
+import { MCPClient } from '@mcp/client';
+
+const client = new MCPClient({
+    transport: 'websocket',
+    url: 'ws://localhost:3000'
+});
+
+await client.connect();
+```
+
+## Architecture Overview
+
+MCP follows a layered architecture:
+
+1. **Transport Layer**: Handles communication
+2. **Protocol Layer**: Manages message formats
+3. **Tool Layer**: Provides function calling
+4. **Context Layer**: Manages state and context
+
+## Next Steps
+
+- Read the [Architecture Guide](./architecture) for detailed system design
+- Explore [Tools](./tools) for function calling capabilities
+- Learn about [Prompts](./prompts) for template management
+- Understand [Resources](./resources) for data handling 

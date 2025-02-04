@@ -1,0 +1,188 @@
+---
+title: "Getting Started"
+description: "Quick start guide for implementing MCP in your project"
+---
+
+# Getting Started with MCP
+
+This guide will help you get started with implementing the Model Context Protocol in your project. We'll cover installation, basic setup, and common use cases.
+
+## Installation
+
+### Using npm
+
+```bash
+# Install core packages
+npm install @mcp/core @mcp/client
+
+# Optional packages for specific features
+npm install @mcp/tools @mcp/transport-ws
+```
+
+### Using yarn
+
+```bash
+# Install core packages
+yarn add @mcp/core @mcp/client
+
+# Optional packages for specific features
+yarn add @mcp/tools @mcp/transport-ws
+```
+
+## Basic Setup
+
+### 1. Create a Client
+
+```typescript
+import { MCPClient } from '@mcp/client';
+import { WebSocketTransport } from '@mcp/transport-ws';
+
+const client = new MCPClient({
+    transport: new WebSocketTransport({
+        url: 'ws://localhost:3000'
+    })
+});
+
+await client.connect();
+```
+
+### 2. Register Tools
+
+```typescript
+import { ToolRegistry } from '@mcp/tools';
+
+const registry = new ToolRegistry();
+
+// Register a simple tool
+registry.register({
+    name: 'echo',
+    description: 'Echo back the input',
+    parameters: {
+        type: 'object',
+        properties: {
+            message: { type: 'string' }
+        },
+        required: ['message']
+    },
+    handler: async ({ message }) => message
+});
+```
+
+### 3. Handle Messages
+
+```typescript
+client.onMessage(async (message) => {
+    if (message.type === 'tool_call') {
+        const result = await registry.execute(message.tool, message.parameters);
+        await client.sendResult(message.id, result);
+    }
+});
+```
+
+## Common Use Cases
+
+### 1. File Operations
+
+```typescript
+import { FileSystem } from '@mcp/tools';
+
+const fs = new FileSystem();
+
+registry.register({
+    name: 'readFile',
+    description: 'Read file contents',
+    parameters: {
+        type: 'object',
+        properties: {
+            path: { type: 'string' }
+        },
+        required: ['path']
+    },
+    handler: async ({ path }) => fs.readFile(path)
+});
+```
+
+### 2. Context Management
+
+```typescript
+import { ContextManager } from '@mcp/core';
+
+const context = new ContextManager();
+
+// Add context
+context.add({
+    type: 'environment',
+    data: process.env
+});
+
+// Use context in prompts
+const prompt = context.buildPrompt({
+    template: 'Current working directory: {{env.PWD}}'
+});
+```
+
+### 3. Custom Tools
+
+```typescript
+registry.register({
+    name: 'fetchWeather',
+    description: 'Get weather information',
+    parameters: {
+        type: 'object',
+        properties: {
+            location: { type: 'string' }
+        },
+        required: ['location']
+    },
+    handler: async ({ location }) => {
+        // Implement weather API call
+        return await weatherApi.get(location);
+    }
+});
+```
+
+## Best Practices
+
+### Security
+
+1. **Validate Inputs**
+   ```typescript
+   import { validateParameters } from '@mcp/core';
+   
+   const params = validateParameters(toolSchema, userInput);
+   ```
+
+2. **Handle Errors**
+   ```typescript
+   try {
+       await tool.handler(params);
+   } catch (error) {
+       console.error('Tool execution failed:', error);
+       throw new ToolExecutionError(error.message);
+   }
+   ```
+
+### Performance
+
+1. **Use Connection Pooling**
+   ```typescript
+   const pool = new ConnectionPool({
+       maxConnections: 10,
+       timeout: 5000
+   });
+   ```
+
+2. **Implement Caching**
+   ```typescript
+   const cache = new ResourceCache({
+       maxSize: 1000,
+       ttl: 3600
+   });
+   ```
+
+## Next Steps
+
+- Explore [Advanced Tools](./tools) documentation
+- Learn about [Context Management](./roots)
+- Understand [Security Best Practices](./security)
+- Check out [Example Projects](./examples)

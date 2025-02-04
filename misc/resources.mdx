@@ -1,0 +1,116 @@
+---
+title: "Resources"
+description: "Learn about MCP's resource management system"
+---
+
+MCP's resource system provides a way to manage and access various types of data and services. This document covers resource concepts, implementation, and best practices.
+
+## Resource concepts
+
+### Basic structure
+
+Resources in MCP are defined using a typed interface:
+
+```typescript
+interface Resource<T> {
+    id: string;
+    type: string;
+    data: T;
+    metadata: Record<string, any>;
+    lifecycle: ResourceLifecycle;
+}
+
+enum ResourceLifecycle {
+    Active = "active",
+    Inactive = "inactive",
+    Pending = "pending",
+    Error = "error"
+}
+```
+
+## Resource types
+
+### File resources
+
+Manage file-based resources:
+
+```typescript
+interface FileResource extends Resource<FileData> {
+    path: string;
+    encoding: string;
+    size: number;
+}
+
+interface FileData {
+    content: string | Buffer;
+    lastModified: Date;
+    permissions: number;
+}
+```
+
+### Memory resources
+
+Handle in-memory data:
+
+```typescript
+interface MemoryResource extends Resource<any> {
+    maxSize?: number;
+    ttl?: number;
+    priority: number;
+}
+```
+
+## Resource management
+
+### Registration
+
+Register and track resources:
+
+```typescript
+class ResourceRegistry {
+    register<T>(resource: Resource<T>): void;
+    unregister(id: string): void;
+    get<T>(id: string): Resource<T> | null;
+    list(): Resource<any>[];
+}
+```
+
+### Lifecycle management
+
+Control resource states:
+
+```typescript
+class ResourceManager {
+    activate(id: string): Promise<void>;
+    deactivate(id: string): Promise<void>;
+    cleanup(): Promise<void>;
+    monitor(options: MonitorOptions): void;
+}
+```
+
+## Best practices
+
+### Resource design
+
+- Use clear resource types
+- Include necessary metadata
+- Implement proper cleanup
+- Handle resource limits
+- Monitor resource usage
+- Document dependencies
+
+### Performance
+
+- Cache frequently used resources
+- Implement resource pooling
+- Use lazy loading
+- Handle resource pressure
+- Implement proper garbage collection
+
+### Security
+
+- Validate resource access
+- Implement resource isolation
+- Secure sensitive data
+- Audit resource usage
+- Handle resource exhaustion 

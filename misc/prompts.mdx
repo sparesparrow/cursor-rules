@@ -1,0 +1,78 @@
+---
+title: "Prompts"
+description: "Learn about MCP's prompt management and templating"
+---
+
+MCP provides a robust system for managing and customizing prompts used in LLM interactions. This document covers prompt concepts, templating, and best practices.
+
+## Prompt concepts
+
+### Basic structure
+
+Prompts in MCP consist of:
+
+- **System messages**: Define the LLM's role and core instructions
+- **Context blocks**: Provide relevant information and context
+- **User messages**: Contain the actual user queries
+- **Assistant messages**: Previous responses in the conversation
+
+### Template variables
+
+Prompts can include template variables that are populated at runtime:
+
+```typescript
+const template = `
+System: You are a helpful assistant with access to {{context.capabilities}}.
+User: {{user_message}}
+`;
+```
+
+## Context injection
+
+MCP allows dynamic injection of context into prompts:
+
+```typescript
+interface ContextBlock {
+    type: "file" | "git" | "custom";
+    content: string;
+    metadata?: Record<string, any>;
+}
+
+class PromptBuilder {
+    addContext(block: ContextBlock): void;
+    addSystemMessage(message: string): void;
+    addUserMessage(message: string): void;
+}
+```
+
+### Context types
+
+Common context types include:
+
+1. **File contents**: Code, documentation, or data files
+2. **Git information**: Repository state, diffs, branches
+3. **Environment data**: Runtime variables, configurations
+4. **Custom context**: Application-specific information
+
+## Best practices
+
+### Prompt design
+
+- Keep system messages clear and focused
+- Use consistent formatting for context blocks
+- Include relevant metadata with context
+- Follow the principle of least privilege
+
+### Template management
+
+- Use typed template variables when possible
+- Validate template syntax at build time
+- Document expected variable formats
+- Handle missing variables gracefully
+
+### Context handling
+
+- Filter sensitive information from context
+- Limit context size to prevent token overflow
+- Order context by relevance
+- Include version information when needed 

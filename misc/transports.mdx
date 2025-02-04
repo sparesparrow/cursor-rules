@@ -1,0 +1,112 @@
+---
+title: "Transports"
+description: "Learn about MCP's transport layer and communication mechanisms"
+---
+
+MCP's transport layer provides flexible communication options between clients and servers. This document covers transport types, implementation, and configuration.
+
+## Transport types
+
+### WebSocket transport
+
+The WebSocket transport enables browser and Node.js connections:
+
+```typescript
+class WebSocketTransport implements Transport {
+    constructor(options: {
+        url: string;
+        protocols?: string[];
+        headers?: Record<string, string>;
+    });
+
+    connect(): Promise<void>;
+    send(data: any): Promise<void>;
+    onMessage(handler: (data: any) => void): void;
+}
+```
+
+### Unix domain sockets
+
+For local inter-process communication on Unix systems:
+
+```typescript
+class UnixSocketTransport implements Transport {
+    constructor(options: {
+        path: string;
+        permissions?: number;
+    });
+
+    connect(): Promise<void>;
+    send(data: any): Promise<void>;
+    onMessage(handler: (data: any) => void): void;
+}
+```
+
+### Named pipes (Windows)
+
+Windows-specific IPC using named pipes:
+
+```typescript
+class NamedPipeTransport implements Transport {
+    constructor(options: {
+        pipeName: string;
+        serverName?: string;
+    });
+
+    connect(): Promise<void>;
+    send(data: any): Promise<void>;
+    onMessage(handler: (data: any) => void): void;
+}
+```
+
+## Custom transports
+
+### Implementation
+
+Create custom transports by implementing the Transport interface:
+
+```typescript
+interface Transport {
+    connect(): Promise<void>;
+    disconnect(): Promise<void>;
+    send(data: any): Promise<void>;
+    onMessage(handler: (data: any) => void): void;
+    onError(handler: (error: Error) => void): void;
+}
+```
+
+## Configuration
+
+### Connection options
+
+Common configuration options:
+
+1. **Timeouts**: Connection and operation timeouts
+2. **Retry logic**: Automatic reconnection
+3. **Buffer sizes**: Message buffering limits
+4. **Security**: TLS/SSL settings
+
+### Best practices
+
+- Implement proper error handling
+- Use appropriate buffer sizes
+- Monitor connection health
+- Handle reconnection gracefully
+- Implement message queuing
+- Validate message formats
+
+## Security considerations
+
+### Authentication
+
+- Support for various auth methods
+- Token-based authentication
+- Certificate validation
+- Custom auth handlers
+
+### Encryption
+
+- TLS/SSL configuration
+- Custom encryption layers
+- Key management
+- Secure key exchange 

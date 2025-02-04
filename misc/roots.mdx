@@ -1,0 +1,112 @@
+---
+title: "Roots"
+description: "Understanding MCP's root system for context organization"
+---
+
+MCP uses a root system to organize and manage context hierarchies. This document explains how roots work and how to use them effectively.
+
+## Root concepts
+
+### What is a root?
+
+A root in MCP represents a top-level context container:
+
+```typescript
+interface Root {
+    id: string;
+    name: string;
+    type: RootType;
+    metadata: Record<string, any>;
+    children: Root[];
+}
+
+enum RootType {
+    Workspace = "workspace",
+    Project = "project",
+    Document = "document",
+    Custom = "custom"
+}
+```
+
+## Root hierarchy
+
+### Structure
+
+Roots can be organized hierarchically:
+
+```typescript
+const workspaceRoot: Root = {
+    id: "workspace-1",
+    name: "My Workspace",
+    type: RootType.Workspace,
+    metadata: {},
+    children: [
+        {
+            id: "project-1",
+            name: "Frontend",
+            type: RootType.Project,
+            metadata: {},
+            children: []
+        }
+    ]
+};
+```
+
+### Navigation
+
+Traverse and manage root hierarchies:
+
+```typescript
+class RootNavigator {
+    findRoot(id: string): Root | null;
+    getPath(root: Root): Root[];
+    getChildren(root: Root): Root[];
+    getParent(root: Root): Root | null;
+}
+```
+
+## Root management
+
+### Creation
+
+Create new roots programmatically:
+
+```typescript
+class RootManager {
+    createRoot(options: {
+        name: string;
+        type: RootType;
+        parent?: Root;
+        metadata?: Record<string, any>;
+    }): Root;
+
+    deleteRoot(root: Root): void;
+    updateRoot(root: Root, updates: Partial<Root>): Root;
+}
+```
+
+### Best practices
+
+- Use meaningful root names
+- Keep hierarchies shallow
+- Maintain consistent metadata
+- Document root relationships
+- Clean up unused roots
+- Version root structures
+
+## Common use cases
+
+1. **Workspace organization**
+   - Project grouping
+   - Resource management
+   - Context isolation
+
+2. **Document management**
+   - File hierarchies
+   - Content organization
+   - Version tracking
+
+3. **Custom contexts**
+   - Application state
+   - User preferences
+   - Runtime configuration 

@@ -1,0 +1,96 @@
+---
+title: "Tools"
+description: "Learn about MCP's tool system for LLM function calling"
+---
+
+MCP provides a powerful tool system that enables LLMs to interact with external functions and services. This document covers tool concepts, implementation, and best practices.
+
+## Tool concepts
+
+### Basic structure
+
+Tools in MCP are defined using a schema-based approach:
+
+```typescript
+interface Tool {
+    name: string;
+    description: string;
+    parameters: JSONSchema;
+    handler: (params: any) => Promise<any>;
+}
+```
+
+### Parameter schemas
+
+Tools use JSON Schema to define their parameters:
+
+```typescript
+const exampleTool: Tool = {
+    name: "searchFiles",
+    description: "Search for files matching a pattern",
+    parameters: {
+        type: "object",
+        properties: {
+            pattern: { type: "string" },
+            directory: { type: "string" },
+            maxResults: { type: "number" }
+        },
+        required: ["pattern"]
+    },
+    handler: async (params) => {
+        // Implementation
+    }
+};
+```
+
+## Tool registration
+
+### Server-side registration
+
+Tools are registered with the MCP server:
+
+```typescript
+class ToolRegistry {
+    register(tool: Tool): void;
+    unregister(toolName: string): void;
+    list(): Tool[];
+}
+```
+
+### Tool discovery
+
+Clients can discover available tools:
+
+1. **Capability negotiation**: During connection
+2. **Dynamic discovery**: Runtime tool queries
+3. **Schema validation**: Automatic parameter checking
+
+## Best practices
+
+### Tool design
+
+- Use clear, descriptive names
+- Provide detailed descriptions
+- Keep parameters simple and typed
+- Handle errors gracefully
+
+### Security
+
+- Validate all inputs
+- Implement proper access control
+- Audit tool usage
+- Sanitize sensitive outputs
+
+### Performance
+
+- Keep tools focused and lightweight
+- Cache results when appropriate
+- Use async operations efficiently
+- Monitor execution times
+
+## Common tool types
+
+1. **File operations**: Read, write, search
+2. **Process management**: Start, stop, monitor
+3. **Network requests**: API calls, downloads
+4. **Data processing**: Parse, transform, validate 

@@ -1,0 +1,127 @@
+---
+title: "Sampling"
+description: "Learn about MCP's sampling and token management"
+---
+
+MCP provides sophisticated sampling mechanisms for managing LLM token usage and response generation. This document covers sampling concepts, strategies, and optimization techniques.
+
+## Sampling concepts
+
+### Basic structure
+
+Sampling configuration in MCP:
+
+```typescript
+interface SamplingConfig {
+    temperature: number;
+    topP: number;
+    maxTokens: number;
+    stopSequences: string[];
+    presencePenalty: number;
+    frequencyPenalty: number;
+}
+```
+
+## Sampling strategies
+
+### Temperature-based
+
+Control response randomness:
+
+```typescript
+interface TemperatureSampling extends SamplingConfig {
+    strategy: "temperature";
+    temperature: number; // 0.0 to 2.0
+    seed?: number;
+}
+```
+
+### Top-P (nucleus) sampling
+
+Focus on most likely tokens:
+
+```typescript
+interface TopPSampling extends SamplingConfig {
+    strategy: "top_p";
+    topP: number; // 0.0 to 1.0
+    minTokens?: number;
+}
+```
+
+## Token management
+
+### Token counting
+
+Track and manage token usage:
+
+```typescript
+class TokenCounter {
+    countTokens(text: string): number;
+    estimateTokens(text: string): number;
+    splitIntoChunks(text: string, maxTokens: number): string[];
+}
+```
+
+### Token optimization
+
+Optimize token usage:
+
+```typescript
+interface TokenOptimizer {
+    compress(text: string): string;
+    truncate(text: string, maxTokens: number): string;
+    summarize(text: string, targetTokens: number): Promise<string>;
+}
+```
+
+## Best practices
+
+### Sampling configuration
+
+- Choose appropriate temperatures
+- Set reasonable token limits
+- Use meaningful stop sequences
+- Balance penalties carefully
+- Monitor sampling outcomes
+
+### Token efficiency
+
+- Minimize unnecessary tokens
+- Use efficient encodings
+- Implement token caching
+- Handle long sequences
+- Optimize context windows
+
+### Quality control
+
+- Validate sampling results
+- Monitor response quality
+- Implement fallbacks
+- Handle edge cases
+- Track sampling metrics
+
+## Advanced techniques
+
+### Adaptive sampling
+
+- Dynamic temperature adjustment
+- Context-aware sampling
+- Quality-based adaptation
+- Performance optimization
+
+### Specialized sampling
+
+1. **Code generation**
+   - Lower temperatures
+   - Strict stop sequences
+   - Token type filtering
+
+2. **Creative text**
+   - Higher temperatures
+   - Nucleus sampling
+   - Style preservation
+
+3. **Technical content**
+   - Precise sampling
+   - Format validation
+   - Domain constraints 
