@@ -1,0 +1,47 @@
+---
+description: Guidelines for managing dependencies in Podman Desktop extensions, including workspace references, version management, package management with pnpm, and security considerations
+globs: ["extensions/*/package.json"]
+---
+# Podman Desktop Extension Dependency Management
+
+## Workspace Dependencies
+1. Use workspace references for shared dependencies:
+   ```json
+   {
+     "dependencies": {
+       "@podman-desktop/api": "workspace:*"
+     }
+   }
+   ```
+2. Manage conflicts using pnpm.overrides in root package.json
+3. Coordinate breaking changes with core maintainers
+
+## Version Management
+1. External Dependencies:
+   - Specify exact versions
+   - Document version requirements
+   - Keep dependencies up to date
+2. Compatibility:
+   - Verify compatibility with core Podman Desktop
+   - Test with different versions
+   - Handle version mismatches gracefully
+
+## Package Management
+1. Use pnpm:
+   - Follow pnpm best practices
+   - Use pnpm workspaces
+   - Maintain clean dependency tree
+2. Scripts:
+   - Define clear build scripts
+   - Include development scripts
+   - Add test scripts
+
+## Security
+1. Dependency Auditing:
+   - Regular security audits
+   - Update vulnerable dependencies
+   - Monitor dependency health
+2. Version Pinning:
+   - Pin critical dependencies
+   - Use lockfiles
+   - Document version changes 

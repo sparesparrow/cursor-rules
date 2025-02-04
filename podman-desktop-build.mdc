@@ -1,0 +1,142 @@
+---
+description: Build process guidelines for Podman Desktop extensions
+globs: ["extensions/*/vite.config.js", "extensions/*/tsconfig.json"]
+---
+# Podman Desktop Extension Build Process
+
+## Build Configuration
+1. Use Vite for building:
+   ```json
+   {
+     "scripts": {
+       "build": "vite build",
+       "watch": "vite build --watch",
+       "dev": "vite"
+     }
+   }
+   ```
+
+When configuring Vite for library builds, ensure that:
+
+- The `entry` point is explicitly defined using the `lib` options.
+- You correctly set up `rollupOptions.input` if your build target is not the default index file.
+
+This is crucial for components like the extension API that do not follow the standard application entry.
+
+2. Configure TypeScript properly:
+   ```json
+   {
+     "compilerOptions": {
+       "module": "esnext",
+       "target": "esnext",
+       "sourceMap": true,
+       "strict": true,
+       "moduleResolution": "Node",
+       "skipLibCheck": true,
+       "types": ["node"]
+     }
+   }
+   ```
+3. Support hot module replacement for development
+
+## Build Scripts
+1. Define clear build commands:
+   - Production build
+   - Development build
+   - Watch mode
+2. Include necessary scripts:
+   - Lint checking
+   - Type checking
+   - Testing
+3. Optimize build process:
+   - Minimize bundle size
+   - Enable tree shaking
+   - Configure code splitting
+
+## Development Environment
+1. Configure development tools:
+   - ESLint configuration
+   - Prettier setup
+   - Editor configuration
+2. Support debugging:
+   - Source maps
+   - Debug configurations
+   - Development tools
+
+## Build Artifacts
+1. Manage output:
+   - Clean build directory
+   - Organize output files
+   - Version artifacts
+2. Handle assets:
+   - Process static files
+   - Optimize images
+   - Bundle resources
+
+## Quality Checks
+1. Pre-build checks:
+   - Lint validation
+   - Type checking
+   - Unit tests
+2. Post-build validation:
+   - Bundle analysis
+   - Integration tests
+   - Performance checks
+
+Before moving on to the next build step, verify that:
+
+- Each build process completes without errors.
+- Warning messages (e.g., about Svelte 5 compatibility or bundle size) are addressed or noted.
+
+Consider running:
+- Lint checks (`pnpm run lint:check`)
+- Type checks (`pnpm run typecheck`)
+- Unit tests (`pnpm run test:unit`)
+
+## Troubleshooting Vite Build Errors
+
+**Issue:** Build fails due to missing entry points in library builds.
+
+**Solution:**  
+- Ensure that your Vite configuration files explicitly define the entry point using the `lib` option and `rollupOptions.input`.
+
+**Example:**
+
+```js:packages/extension-api/vite.config.js
+import { defineConfig } from 'vite';
+import path from 'path';
+
+export default defineConfig({
+  build: {
+    lib: {
+      // Ensure the correct entry point is set for the library build
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      name: 'ExtensionAPI',
+      formats: ['es', 'cjs']
+    },
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'src/index.ts')
+      }
+    }
+  }
+});
+```
+
+## Build Order Recommendations
+
+1. **Clean previous build artifacts:** 
+- `cd /path/to/podman-desktop`
+- `rm -rf packages/*/dist extensions/*/dist`
+
+2. **Build the main process (ensures correct entry configuration):** 
+- `pnpm run build:main`
+
+3. **Build preload scripts and UI components:** 
+- `pnpm run build:preload && pnpm run build:renderer`
+
+4. **Build all extensions:** 
+- `pnpm run build:extensions`
+
+5. **Compile via electron-builder (or use the development compile command):** 
+- `pnpm run compile`

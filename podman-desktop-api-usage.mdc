@@ -1,0 +1,48 @@
+---
+description: Guidelines for using the Podman Desktop Extension API
+globs: ["extensions/*/src/**/*.ts"]
+---
+# Podman Desktop Extension API Usage
+
+## API Import and Setup
+1. Import the Podman Desktop API:
+   ```typescript
+   import * as extensionApi from '@podman-desktop/api';
+   ```
+2. Implement required lifecycle methods:
+   - `activate(context: ExtensionContext)`: Entry point
+   - `deactivate()`: Optional cleanup
+3. Register all disposable resources with `context.subscriptions`
+
+## API Integration Points
+1. Provider Registration:
+   - Register container providers
+   - Register kubernetes providers
+   - Register image providers
+2. Event Handling:
+   - Subscribe to relevant events
+   - Implement proper event cleanup
+   - Use typed event emitters
+3. UI Integration:
+   - Register commands
+   - Add menu entries
+   - Create status bar items
+   - Add configuration panels
+4. File System Integration:
+   - Use file system watchers
+   - Handle file system events
+   - Implement proper cleanup
+
+## Best Practices
+1. Error Handling:
+   - Handle API errors gracefully
+   - Provide user feedback
+   - Log errors appropriately
+2. Resource Management:
+   - Dispose of resources properly
+   - Avoid memory leaks
+   - Clean up subscriptions
+3. API Version Compatibility:
+   - Check API version requirements
+   - Handle API deprecations
+   - Use feature detection when needed

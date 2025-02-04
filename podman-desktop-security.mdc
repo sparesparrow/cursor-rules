@@ -1,0 +1,66 @@
+---
+description: Security guidelines for Podman Desktop extensions
+globs: ["extensions/*/src/**/*.ts"]
+---
+# Podman Desktop Extension Security Guidelines
+
+## Data Storage
+1. Use secure storage API:
+   ```typescript
+   // Example of secure storage usage
+   await extensionApi.secureStorage.setPassword('key', 'value');
+   const value = await extensionApi.secureStorage.getPassword('key');
+   ```
+2. Never store sensitive data in plain text
+3. Implement proper data encryption
+4. Clean up sensitive data when not needed
+
+## Authentication
+1. Implement proper authentication:
+   - Use secure authentication methods
+   - Handle auth tokens securely
+   - Implement token refresh
+2. Session Management:
+   - Secure session handling
+   - Proper session timeout
+   - Clean session data
+
+## Container Security
+1. Follow rootless container security principles:
+   - Run containers without root privileges
+   - Use security contexts
+   - Implement proper isolation
+2. Image Security:
+   - Verify image signatures
+   - Scan for vulnerabilities
+   - Use trusted registries
+
+## Input Validation
+1. Validate all user inputs:
+   - Sanitize user input
+   - Prevent injection attacks
+   - Use proper encoding
+2. API Security:
+   - Validate API inputs
+   - Handle API errors securely
+   - Implement rate limiting
+
+## Communication
+1. Use secure protocols:
+   - HTTPS for web communication
+   - WSS for WebSocket connections
+   - TLS for other protocols
+2. Data Protection:
+   - Implement end-to-end encryption
+   - Protect data in transit
+   - Secure API endpoints
+
+## Security Best Practices
+1. Regular Security Updates:
+   - Keep dependencies updated
+   - Apply security patches
+   - Monitor security advisories
+2. Security Testing:
+   - Perform security audits
+   - Test security features
+   - Validate security measures

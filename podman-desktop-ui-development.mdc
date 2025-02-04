@@ -1,0 +1,54 @@
+---
+description: Best practices for UI development in Podman Desktop extensions using Svelte, including component development, styling with Tailwind CSS, accessibility, and performance optimization
+globs: ["extensions/*/src/**/*.{svelte,css}"]
+---
+# Podman Desktop Extension UI Development
+
+## Component Development
+1. Use Svelte for components:
+   - Create reusable components
+   - Follow Svelte best practices
+   - Keep components small and focused
+2. Component Organization:
+   - Group related components
+   - Use proper file naming
+   - Maintain component documentation
+
+## UI Patterns
+1. Follow Podman Desktop's UI patterns:
+   - Use color registry variables:
+     ```css
+     /* Example */
+     color: var(--pd-button-primary-bg);
+     background: var(--pd-background-color);
+     ```
+   - Implement responsive designs
+   - Support both light and dark themes
+2. Accessibility:
+   - Follow WCAG guidelines
+   - Provide proper ARIA labels
+   - Ensure keyboard navigation
+
+## Performance
+1. Lazy Loading:
+   - Implement lazy loading for heavy components
+   - Use dynamic imports where appropriate
+   - Optimize initial load time
+2. State Management:
+   - Use Svelte stores efficiently
+   - Minimize unnecessary re-renders
+   - Handle state updates properly
+
+## Styling
+1. Use Tailwind CSS:
+   - Follow utility-first approach
+   - Maintain consistent styling
+   - Use Podman Desktop's design tokens
+2. CSS Best Practices:
+   - Use scoped styles
+   - Avoid global styles
+   - Follow BEM naming when needed
+3. Theme Support:
+   - Support system theme
+   - Use theme variables
+   - Test both themes

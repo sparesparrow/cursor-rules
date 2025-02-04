@@ -1,0 +1,62 @@
+---
+description: Error handling guidelines for Podman Desktop extensions
+globs: ["extensions/*/src/**/*.ts"]
+---
+# Podman Desktop Extension Error Handling
+
+## Async Operations
+1. Wrap async operations in try/catch blocks:
+   ```typescript
+   try {
+     await someAsyncOperation();
+   } catch (error) {
+     logger.error('Operation failed', { error });
+     // Handle error appropriately
+   }
+   ```
+2. Handle promise rejections properly
+3. Use async/await consistently
+
+## Error Logging
+1. Log errors with context:
+   - Include error details
+   - Add relevant metadata
+   - Use appropriate log levels
+2. Consistent Format:
+   - Use structured logging
+   - Include timestamps
+   - Add correlation IDs
+
+## User Feedback
+1. Provide user-friendly error messages:
+   - Clear error descriptions
+   - Actionable feedback
+   - Appropriate error levels
+2. UI Error Handling:
+   - Implement global error boundaries
+   - Show error states gracefully
+   - Provide recovery options
+
+## Error Types
+1. Define custom error types:
+   ```typescript
+   class ExtensionError extends Error {
+     constructor(message: string, public readonly code: string) {
+       super(message);
+     }
+   }
+   ```
+2. Use error codes consistently
+3. Document error conditions
+
+## Recovery Strategies
+1. Implement graceful degradation
+2. Provide fallback options
+3. Handle cleanup after errors
+4. Maintain system stability
+
+## Security Considerations
+1. Avoid exposing sensitive information in errors
+2. Validate all error inputs
+3. Handle security-related errors appropriately
+4. Log security incidents properly

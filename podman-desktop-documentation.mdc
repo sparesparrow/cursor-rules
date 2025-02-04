@@ -1,0 +1,70 @@
+---
+description: Documentation guidelines for Podman Desktop extensions
+globs: ["extensions/*/docs/**/*.md", "extensions/*/src/**/*.ts"]
+---
+# Podman Desktop Extension Documentation
+
+## README Documentation
+1. Maintain comprehensive README.md:
+   - Clear project description
+   - Installation instructions
+   - Usage examples
+   - Configuration options
+   - Troubleshooting guide
+2. Keep documentation current:
+   - Update with new features
+   - Revise for changes
+   - Remove obsolete content
+
+## Code Documentation
+1. Use JSDoc for API documentation:
+   ```typescript
+   /**
+    * Processes a container operation
+    * @param containerId - The ID of the container
+    * @param operation - The operation to perform
+    * @returns Promise resolving to operation result
+    * @throws {ContainerError} When operation fails
+    */
+   async function processContainer(
+     containerId: string,
+     operation: ContainerOperation
+   ): Promise<OperationResult> {
+     // Implementation
+   }
+   ```
+2. Document interfaces and types:
+   - Clear descriptions
+   - Parameter documentation
+   - Return type documentation
+3. Include examples in documentation
+
+## Design Documentation
+1. Document design decisions in NOTEPAD:
+   - Architecture decisions
+   - Technical choices
+   - Implementation details
+2. Maintain decision history:
+   - Record major changes
+   - Document alternatives considered
+   - Explain trade-offs
+
+## User Documentation
+1. Include usage examples:
+   - Common use cases
+   - Configuration examples
+   - Best practices
+2. Provide configuration guides:
+   - Available options
+   - Default values
+   - Configuration format
+
+## Maintenance
+1. Regular updates:
+   - Keep documentation current
+   - Review for accuracy
+   - Update examples
+2. Version documentation:
+   - Tag documentation versions
+   - Maintain changelog
+   - Document breaking changes

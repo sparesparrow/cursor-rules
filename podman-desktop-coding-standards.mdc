@@ -1,0 +1,48 @@
+---
+description: Comprehensive coding standards for Podman Desktop extensions, covering TypeScript usage, SOLID principles, code style, and organization best practices
+globs: ["extensions/*/**/*.{ts,js,svelte}"]
+---
+# Podman Desktop Extension Coding Standards
+
+## TypeScript Usage
+1. Use TypeScript for type safety and better development experience
+2. Enable strict mode in tsconfig.json
+3. Utilize type inference where possible
+4. Define explicit return types for public methods
+
+## SOLID Principles
+1. Single Responsibility:
+   - Each module has one well-defined task
+   - Split complex functionality into smaller, focused modules
+2. Open/Closed:
+   - Design for extension without modification
+   - Use interfaces and abstract classes for extensibility
+3. Liskov Substitution:
+   - Use proper inheritance hierarchies
+   - Ensure derived classes can substitute base classes
+4. Interface Segregation:
+   - Keep interfaces focused and minimal
+   - Split large interfaces into smaller ones
+5. Dependency Inversion:
+   - Depend on abstractions, not implementations
+   - Use dependency injection where appropriate
+
+## Code Style
+1. Keep It Simple (KISS):
+   - Write clear, modular code
+   - Avoid over-engineering
+   - Use descriptive names
+2. Naming Conventions:
+   - Use camelCase for variables and functions
+   - Use PascalCase for classes and components
+   - Use UPPER_CASE for constants
+3. Documentation:
+   - Document all public methods and interfaces with JSDoc
+   - Include examples in documentation where helpful
+   - Keep comments current and meaningful
+
+## Code Organization
+1. Group related functionality together
+2. Maintain clear file and folder structure
+3. Keep files focused and manageable in size
+4. Use meaningful file names that reflect their content

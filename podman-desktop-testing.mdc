@@ -1,0 +1,60 @@
+---
+description: Testing requirements and guidelines for Podman Desktop extensions
+globs: ["extensions/*/**/*.{spec,test}.{ts,js}"]
+---
+# Podman Desktop Extension Testing
+
+## Unit Testing
+1. Use Vitest for unit tests:
+   - Write comprehensive unit tests
+   - Follow test-driven development when possible
+   - Maintain high test coverage
+2. Test Organization:
+   - Group related tests
+   - Use descriptive test names
+   - Follow AAA pattern (Arrange, Act, Assert)
+
+## Integration Testing
+1. Use Playwright for integration tests:
+   - Test end-to-end functionality
+   - Verify UI interactions
+   - Test cross-component integration
+2. Test Coverage:
+   - Test critical user paths
+   - Verify error handling
+   - Test edge cases
+
+## Test Execution
+1. Run tests using standard commands:
+   ```bash
+   pnpm test:extensions
+   pnpm test:e2e
+   ```
+2. Continuous Integration:
+   - Run tests in CI pipeline
+   - Maintain test stability
+   - Fix failing tests promptly
+
+## Cross-Platform Testing
+1. Verify functionality on:
+   - Windows
+   - macOS
+   - Linux
+2. Platform-Specific:
+   - Test platform-specific features
+   - Handle platform differences
+   - Document platform limitations
+
+## Test Best Practices
+1. Test Independence:
+   - Tests should be independent
+   - Clean up test environment
+   - Avoid test interdependencies
+2. Test Data:
+   - Use meaningful test data
+   - Avoid hardcoded values
+   - Clean up test data
+3. Mock External Dependencies:
+   - Use proper mocking
+   - Test error conditions
+   - Verify mock interactions

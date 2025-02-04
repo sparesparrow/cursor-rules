@@ -1,0 +1,23 @@
+---
+description: Rules for structuring a Podman Desktop extension project
+globs: ["extensions/*/"]
+---
+# Podman Desktop Extension Project Structure
+
+1. Place all extension code in a dedicated folder under `extensions/<extension-name>/`
+2. Follow the standard directory structure:
+   ```
+   extensions/<extension-name>/
+   ├── src/
+   │   ├── extension.ts         # Main entry point
+   │   ├── services/           # Business logic
+   │   ├── components/         # UI components (Svelte)
+   │   └── utils/             # Helper functions
+   ├── docs/
+   │   ├── README.md          # Documentation
+   │   └── NOTEPAD           # Design decisions & notes
+   └── package.json          # Extension metadata
+   ```
+3. Keep extension code isolated from core modules
+4. Maintain clear separation between business logic and UI components
+5. Follow modular design principles for better maintainability

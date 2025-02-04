@@ -1,0 +1,142 @@
+# Podman Desktop Extension Development Rules
+
+## Project Structure
+
+1. Place all extension code in a dedicated folder under `extensions/<extension-name>/`
+2. Follow the standard directory structure:
+   ```
+   extensions/<extension-name>/
+   ├── src/
+   │   ├── extension.ts         # Main entry point
+   │   ├── services/           # Business logic
+   │   ├── components/         # UI components (Svelte)
+   │   └── utils/             # Helper functions
+   ├── docs/
+   │   ├── README.md          # Documentation
+   │   └── NOTEPAD           # Design decisions & notes
+   └── package.json          # Extension metadata
+   ```
+
+## Coding Standards
+
+1. Use TypeScript for type safety and better development experience
+2. Follow SOLID principles:
+   - Single Responsibility: Each module has one well-defined task
+   - Open/Closed: Design for extension without modification
+   - Liskov Substitution: Use proper inheritance hierarchies
+   - Interface Segregation: Keep interfaces focused and minimal
+   - Dependency Inversion: Depend on abstractions
+3. Keep It Simple (KISS):
+   - Write clear, modular code
+   - Avoid over-engineering
+   - Use descriptive names
+4. Document all public methods and interfaces with JSDoc
+5. Use camelCase for variables/functions and PascalCase for classes/components
+
+## Extension API Usage
+
+1. Import the Podman Desktop API:
+   ```typescript
+   import * as extensionApi from '@podman-desktop/api';
+   ```
+2. Implement required lifecycle methods:
+   - `activate(context: ExtensionContext)`: Entry point
+   - `deactivate()`: Optional cleanup
+3. Register all disposable resources with `context.subscriptions`
+4. Use API for UI integration:
+   - Provider registration
+   - Event listeners
+   - Menu entries
+   - Configuration panels
+   - File system watchers
+
+## UI Development
+
+1. Use Svelte for components
+2. Follow Podman Desktop's UI patterns:
+   - Use color registry variables (e.g., `var(--pd-button-primary-bg)`)
+   - Implement responsive designs
+   - Support both light and dark themes
+3. Lazy load heavy components
+4. Use Tailwind CSS for styling
+
+## Dependency Management
+
+1. Use workspace references for shared dependencies:
+   ```json
+   {
+     "dependencies": {
+       "@podman-desktop/api": "workspace:*"
+     }
+   }
+   ```
+2. Specify exact versions for external dependencies
+3. Verify compatibility with core Podman Desktop
+4. Use pnpm for package management
+
+## Testing Requirements
+
+1. Write unit tests with Vitest
+2. Create integration tests with Playwright
+3. Test both success and error cases
+4. Verify cross-platform compatibility
+5. Run tests using standard commands:
+   ```bash
+   pnpm test:extensions
+   pnpm test:e2e
+   ```
+
+## Error Handling
+
+1. Wrap async operations in try/catch blocks
+2. Log errors with context
+3. Provide user-friendly error messages
+4. Implement global error boundaries in UI
+5. Use consistent error formats
+
+## Security Guidelines
+
+1. Store sensitive data using secure storage API
+2. Implement proper authentication
+3. Follow rootless container security principles
+4. Validate all user inputs
+5. Use secure communication protocols
+
+## Build Process
+
+1. Use Vite for building:
+   ```json
+   {
+     "scripts": {
+       "build": "vite build",
+       "watch": "vite build --watch"
+     }
+   }
+   ```
+2. Configure TypeScript properly:
+   - Set `"module": "esnext"`
+   - Enable source maps
+   - Use strict mode
+3. Support hot module replacement for development
+
+## Documentation
+
+1. Maintain comprehensive README.md
+2. Document design decisions in NOTEPAD
+3. Use JSDoc for API documentation
+4. Include usage examples
+5. Document configuration options
+
+## Quality Checks
+
+1. Run before submitting PR:
+   ```bash
+   pnpm lint:check
+   pnpm format:check
+   pnpm typecheck
+   pnpm test
+   ```
+2. Use Conventional Commit messages
+3. Update documentation
+4. Ensure extension isolation
+5. Verify cross-platform compatibility
