@@ -1,15 +1,68 @@
-# cursor-rules
-A library of rules for the Cursor IDE, providing organized instructions for the Agent Composer LLM backend.
+# Cursor Rules Repository
 
+A comprehensive collection of Cursor IDE rules for developing AI-powered applications with a focus on agentic workflows, TypeScript development, and cognitive architectures.
 
-- [Architecture Documentation](https://github.com/modelcontextprotocol/docs/concepts/architecture.mdx)
-- [Prompts Documentation](https://github.com/modelcontextprotocol/docs/concepts/prompts.mdx)
-- [Resources Documentation](https://github.com/modelcontextprotocol/docs/concepts/resources.mdx)
-- [Roots Documentation](https://github.com/modelcontextprotocol/docs/concepts/roots.mdx)
-- [Sampling Documentation](https://github.com/modelcontextprotocol/docs/concepts/sampling.mdx)
-- [Tools Documentation](https://github.com/modelcontextprotocol/docs/concepts/tools.mdx)
-- [Transports Documentation](https://github.com/modelcontextprotocol/docs/concepts/transports.mdx)
+## Structure
 
-- [LLMs Full Specification](https://modelcontextprotocol.io/llms-full.txt)
+The rules are organized in a hierarchical structure with increasing specificity:
 
-- [Specification Discussions](https://github.com/modelcontextprotocol/specification/discussions)
+```
+.cursor/rules/
+├── 01-base-*.rules.md        # Base rules (agentic, devops)
+├── 02-*.rules.md            # Framework rules (typescript, mcp)
+├── 03-*.rules.md            # Domain rules (composer, cognitive)
+├── 04-security.rules.md     # Security rules
+└── 05-top5-inspirations.rules.md  # Advanced patterns
+```
+
+## Rule Categories
+
+1. **Base Rules** (01-*)
+   - `01-base-agentic.rules.md`: Foundational patterns for agentic workflows
+   - `01-base-devops.rules.md`: AI-driven DevOps pipeline standards
+
+2. **Framework Rules** (02-*)
+   - `02-typescript.rules.md`: TypeScript development standards
+   - `02-mcp-typescript.rules.md`: MCP-specific TypeScript standards
+
+3. **Domain Rules** (03-*)
+   - `03-composer-agent.rules.md`: AI composer agent standards
+   - `03-cognitive-architecture.rules.md`: Cognitive architecture standards
+
+4. **Security Rules** (04-*)
+   - `04-security.rules.md`: Universal security standards
+
+5. **Advanced Patterns** (05-*)
+   - `05-top5-inspirations.rules.md`: Advanced workflow patterns and best practices
+
+## Usage
+
+1. **Installation**
+   - Clone this repository into your project's root directory
+   - Ensure the `.cursor/rules` directory is properly structured
+
+2. **Rule Application**
+   - Rules are automatically applied based on file patterns (globs)
+   - Higher priority rules (higher numbers) override lower priority ones
+   - Security rules (04-*) always take precedence
+
+3. **Development Workflow**
+   - Follow the patterns and examples in each rule file
+   - Use the provided validation rules for code quality
+   - Implement security considerations as specified
+
+## Contributing
+
+1. **Adding New Rules**
+   - Follow the existing numbering convention
+   - Include proper metadata (description, globs, priority)
+   - Provide clear examples and anti-patterns
+
+2. **Modifying Rules**
+   - Maintain backward compatibility
+   - Update dependencies appropriately
+   - Document changes in commit messages
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
