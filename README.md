@@ -4,47 +4,61 @@ A comprehensive collection of Cursor IDE rules for developing AI-powered applica
 
 ## Structure
 
-The rules are organized in a hierarchical structure with increasing specificity:
+The rules are organized in a hierarchical structure with clear categorization:
 
 ```
 .cursor/rules/
-├── 01-base-*.rules.md        # Base rules (agentic, devops)
-├── 02-*.rules.md            # Framework rules (typescript, mcp)
-├── 03-*.rules.md            # Domain rules (composer, cognitive)
-├── 04-security.rules.md     # Security rules
-└── 05-top5-inspirations.rules.md  # Advanced patterns
+├── core/                    # Core foundational rules
+│   ├── base-agentic.mdc    # Agentic workflow patterns
+│   └── base-devops.mdc     # AI-driven DevOps standards
+│
+├── framework/              # Framework-specific rules
+│   ├── typescript.mdc      # TypeScript standards
+│   └── mcp-typescript.mdc  # MCP-specific standards
+│
+├── domain/                 # Domain-specific rules
+│   ├── composer-agent.mdc           # Composer agent standards
+│   ├── composer-agent-instructions.mdc  # Agent instruction standards
+│   └── cognitive-architecture.mdc   # Cognitive architecture standards
+│
+├── security/              # Security rules
+│   └── security.mdc       # Universal security standards
+│
+└── patterns/              # Advanced patterns
+    └── top5-inspirations.mdc  # Advanced workflow patterns
 ```
 
 ## Rule Categories
 
-1. **Base Rules** (01-*)
-   - `01-base-agentic.rules.md`: Foundational patterns for agentic workflows
-   - `01-base-devops.rules.md`: AI-driven DevOps pipeline standards
+1. **Core Rules** (`core/`)
+   - `base-agentic.mdc`: Foundational patterns for agentic workflows
+   - `base-devops.mdc`: AI-driven DevOps pipeline standards
 
-2. **Framework Rules** (02-*)
-   - `02-typescript.rules.md`: TypeScript development standards
-   - `02-mcp-typescript.rules.md`: MCP-specific TypeScript standards
+2. **Framework Rules** (`framework/`)
+   - `typescript.mdc`: TypeScript development standards
+   - `mcp-typescript.mdc`: MCP-specific TypeScript standards
 
-3. **Domain Rules** (03-*)
-   - `03-composer-agent.rules.md`: AI composer agent standards
-   - `03-cognitive-architecture.rules.md`: Cognitive architecture standards
+3. **Domain Rules** (`domain/`)
+   - `composer-agent.mdc`: AI composer agent standards
+   - `composer-agent-instructions.mdc`: Agent instruction standards
+   - `cognitive-architecture.mdc`: Cognitive architecture standards
 
-4. **Security Rules** (04-*)
-   - `04-security.rules.md`: Universal security standards
+4. **Security Rules** (`security/`)
+   - `security.mdc`: Universal security standards
 
-5. **Advanced Patterns** (05-*)
-   - `05-top5-inspirations.rules.md`: Advanced workflow patterns and best practices
+5. **Advanced Patterns** (`patterns/`)
+   - `top5-inspirations.mdc`: Advanced workflow patterns and best practices
 
 ## Usage
 
 1. **Installation**
    - Clone this repository into your project's root directory
-   - Ensure the `.cursor/rules` directory is properly structured
+   - Ensure the `.cursor/rules` directory structure is maintained
 
 2. **Rule Application**
    - Rules are automatically applied based on file patterns (globs)
-   - Higher priority rules (higher numbers) override lower priority ones
-   - Security rules (04-*) always take precedence
+   - Rules in higher-level directories (e.g., security/) take precedence
+   - Each rule file (.mdc) contains metadata for scope and priority
 
 3. **Development Workflow**
    - Follow the patterns and examples in each rule file
@@ -54,7 +68,8 @@ The rules are organized in a hierarchical structure with increasing specificity:
 ## Contributing
 
 1. **Adding New Rules**
-   - Follow the existing numbering convention
+   - Place rules in appropriate category directory
+   - Use .mdc extension for rule files
    - Include proper metadata (description, globs, priority)
    - Provide clear examples and anti-patterns
 
@@ -62,6 +77,29 @@ The rules are organized in a hierarchical structure with increasing specificity:
    - Maintain backward compatibility
    - Update dependencies appropriately
    - Document changes in commit messages
+
+## File Format
+
+Each .mdc file follows this structure:
+```markdown
+---
+description: Brief description of the rule's purpose
+globs: ["pattern/to/match/*.{ts,js}"]
+priority: numeric_priority
+dependencies: ["other.mdc"]
+---
+
+# Rule Title
+
+## Core Principles
+...
+
+## Code Standards
+...
+
+## Validation Rules
+...
+```
 
 ## License
 
