@@ -19,7 +19,11 @@ The rules are organized in a hierarchical structure with clear categorization:
 ├── domain/                 # Domain-specific rules
 │   ├── composer-agent.mdc           # Composer agent standards
 │   ├── composer-agent-instructions.mdc  # Agent instruction standards
-│   └── cognitive-architecture.mdc   # Cognitive architecture standards
+│   ├── cognitive-architecture.mdc   # Cognitive architecture standards
+│   ├── crewai-agent.mdc            # CrewAI agent standards
+│   ├── solid-analyzer.mdc          # SOLID analysis standards
+│   ├── mermaid-generator.mdc       # Mermaid generation standards
+│   └── monitor-agents.mdc          # Monitoring agent standards
 │
 ├── security/              # Security rules
 │   └── security.mdc       # Universal security standards
@@ -42,6 +46,10 @@ The rules are organized in a hierarchical structure with clear categorization:
    - `composer-agent.mdc`: AI composer agent standards
    - `composer-agent-instructions.mdc`: Agent instruction standards
    - `cognitive-architecture.mdc`: Cognitive architecture standards
+   - `crewai-agent.mdc`: Standards for CrewAI agent development
+   - `solid-analyzer.mdc`: Standards for SOLID principle analysis
+   - `mermaid-generator.mdc`: Standards for Mermaid diagram generation
+   - `monitor-agents.mdc`: Standards for monitoring agent development
 
 4. **Security Rules** (`security/`)
    - `security.mdc`: Universal security standards
@@ -100,6 +108,30 @@ dependencies: ["other.mdc"]
 ## Validation Rules
 ...
 ```
+
+## Project Integration
+
+The rules in this repository are designed to support various project types:
+
+1. **AI Agent Development**
+   - Composer agents with CrewAI integration
+   - Cognitive architectures and workflows
+   - Monitoring and observability agents
+
+2. **Code Analysis Tools**
+   - SOLID principle analyzers
+   - Pattern recognition systems
+   - Code improvement generators
+
+3. **Documentation Tools**
+   - Mermaid diagram generators
+   - Documentation automation
+   - Visual representation tools
+
+4. **DevOps Integration**
+   - CI/CD pipeline automation
+   - Security scanning and validation
+   - Deployment automation
 
 ## License
 
