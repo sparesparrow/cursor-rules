@@ -1,0 +1,363 @@
+---
+description: Standards for implementing AI composer agents and workflow patterns in Cursor
+globs: ["**/DesignPatterns/Agentic/ComposerAgent/**/*.{ts,js,py}", "**/Workflows/Composer/**/*.{ts,js,py}"]
+priority: 30
+dependencies: ["01-base-design-patterns.rules.mdc", "01-base-agentic.rules.mdc"]
+---
+
+# AI Composer Agent Standards
+
+## Overview
+These rules define standards for implementing AI composer agents and workflow patterns in Cursor, ensuring consistent, maintainable, and secure agent implementations.
+
+## Required Sections
+
+### 1. Agent Architecture
+Must implement:
+```typescript
+interface ComposerAgent {
+  // Core agent capabilities
+  compose(task: Task): Promise<Result>;
+  reflect(result: Result): Promise<Feedback>;
+  refine(result: Result, feedback: Feedback): Promise<Result>;
+  
+  // State management
+  getState(): AgentState;
+  updateState(update: Partial<AgentState>): Promise<void>;
+  
+  // Tool integration
+  registerTool(tool: Tool): void;
+  invokeTool(toolName: string, params: any): Promise<any>;
+}
+
+interface AgentState {
+  currentTask?: Task;
+  workflowContext: WorkflowContext;
+  executionHistory: ExecutionRecord[];
+  tools: Map<string, Tool>;
+  patterns: Map<string, Pattern>;
+}
+```
+
+### 2. Workflow Patterns
+Must implement:
+```typescript
+interface Pattern {
+  apply(agent: Agent, task: Task): Promise<Result>;
+  validate(task: Task): boolean;
+  getRequirements(): PatternRequirements;
+}
+
+class ReflectionPattern implements Pattern {
+  async apply(agent: Agent, task: Task): Promise<Result> {
+    // Initial execution
+    const initialResult = await agent.execute(task);
+    
+    // Self-reflection
+    const feedback = await agent.reflect(initialResult);
+    
+    // Refinement
+    return await agent.refine(initialResult, feedback);
+  }
+}
+
+class ParallelDelegationPattern implements Pattern {
+  async apply(agent: Agent, tasks: Task[]): Promise<Result[]> {
+    // Task distribution
+    const delegates = tasks.map(task => this.assignDelegate(task));
+    
+    // Parallel execution
+    const results = await Promise.all(
+      delegates.map(delegate => delegate.execute())
+    );
+    
+    // Result aggregation
+    return this.aggregateResults(results);
+  }
+}
+```
+
+### 3. Error Handling
+Must implement:
+```typescript
+class ComposerError extends Error {
+  constructor(message: string, public context: ErrorContext) {
+    super(message);
+    this.name = 'ComposerError';
+  }
+}
+
+class PatternError extends ComposerError {
+  constructor(message: string, public pattern: Pattern) {
+    super(message, { pattern: pattern.name });
+  }
+}
+
+function handleComposerError(error: ComposerError): Result {
+  logger.error(`Composer error: ${error.message}`, error.context);
+  return createErrorResult(error);
+}
+```
+
+## Validation Rules
+
+### 1. Code Quality
+Must pass:
+```typescript
+const ComposerRules = {
+  // Pattern implementation
+  patternImplementation: {
+    pattern: /implements\s+Pattern/,
+    message: "Implement proper pattern interface"
+  },
+  
+  // State management
+  stateManagement: {
+    pattern: /interface\s+.*State|class\s+.*StateManager/,
+    message: "Implement proper state management"
+  },
+  
+  // Error handling
+  errorHandling: {
+    pattern: /extends\s+ComposerError|catch.*ComposerError/,
+    message: "Implement proper error handling"
+  }
+};
+```
+
+### 2. Security Requirements
+Must implement:
+```typescript
+interface SecurityRequirements {
+  // Input validation
+  validateInput(task: Task): boolean;
+  
+  // Resource limits
+  checkResourceLimits(): boolean;
+  
+  // Access control
+  validateAccess(agent: Agent, resource: Resource): boolean;
+}
+
+class SecurityManager implements SecurityRequirements {
+  validateInput(task: Task): boolean {
+    // Sanitize and validate input
+    return this.inputValidator.validate(task);
+  }
+  
+  checkResourceLimits(): boolean {
+    // Check memory, CPU, and time limits
+    return this.resourceMonitor.checkLimits();
+  }
+}
+```
+
+## Testing Requirements
+
+### 1. Unit Tests
+```typescript
+describe('ComposerAgent', () => {
+  let agent: ComposerAgent;
+  
+  beforeEach(() => {
+    agent = new ComposerAgent();
+  });
+  
+  test('composition workflow', async () => {
+    const task = createTestTask();
+    const result = await agent.compose(task);
+    expect(result).toMatchPattern(expectedPattern);
+  });
+  
+  test('error handling', async () => {
+    const invalidTask = createInvalidTask();
+    await expect(agent.compose(invalidTask))
+      .rejects
+      .toThrow(ComposerError);
+  });
+});
+```
+
+### 2. Integration Tests
+```typescript
+describe('Pattern Integration', () => {
+  test('reflection pattern', async () => {
+    const pattern = new ReflectionPattern();
+    const result = await pattern.apply(agent, task);
+    expect(result.quality).toBeGreaterThan(0.8);
+  });
+  
+  test('parallel delegation', async () => {
+    const pattern = new ParallelDelegationPattern();
+    const results = await pattern.apply(agent, tasks);
+    expect(results).toHaveLength(tasks.length);
+  });
+});
+```
+
+## Performance Guidelines
+
+### 1. Resource Management
+```typescript
+class ResourceManager {
+  private limits = {
+    memory: 512 * 1024 * 1024, // 512MB
+    cpu: 0.5, // 50% CPU
+    time: 30000 // 30 seconds
+  };
+  
+  async monitorExecution(task: () => Promise<any>): Promise<any> {
+    const start = process.hrtime();
+    const result = await task();
+    this.checkExecutionTime(start);
+    return result;
+  }
+}
+```
+
+### 2. Optimization Rules
+- Implement caching for repeated operations
+- Use parallel processing when possible
+- Optimize state updates
+- Minimize tool invocations
+
+## Documentation Requirements
+
+### 1. Architecture Documentation
+Must include:
+```mermaid
+graph TD
+    A[Composer Agent] --> B[Pattern Registry]
+    A --> C[Tool Registry]
+    A --> D[State Manager]
+    B --> E[Reflection Pattern]
+    B --> F[Parallel Pattern]
+    C --> G[Tool Integration]
+    D --> H[State Persistence]
+    
+    style A fill:#2ecc71,stroke:#27ae60
+    style B fill:#3498db,stroke:#2980b9
+    style C fill:#e74c3c,stroke:#c0392b
+```
+
+### 2. Pattern Documentation
+Must document:
+- Pattern purpose and use cases
+- Implementation requirements
+- Error handling approach
+- Performance characteristics
+
+## Maintenance Guidelines
+
+### 1. Code Review Checklist
+- [ ] Pattern implementations complete
+- [ ] Error handling comprehensive
+- [ ] Security measures implemented
+- [ ] Tests cover core functionality
+- [ ] Documentation updated
+
+### 2. Update Process
+1. Review existing patterns
+2. Test new implementations
+3. Update documentation
+4. Validate security measures
+5. Deploy changes
+
+## Security Considerations
+
+### 1. Agent Isolation
+- Implement proper sandboxing
+- Set resource limits
+- Control access to system resources
+
+### 2. Data Protection
+- Validate all inputs
+- Sanitize outputs
+- Encrypt sensitive data
+- Implement access controls
+
+### 3. Execution Safety
+- Monitor resource usage
+- Implement timeouts
+- Handle failures gracefully
+- Log security events
+
+## Integration Guidelines
+
+### 1. Tool Integration
+```typescript
+interface Tool {
+  name: string;
+  description: string;
+  invoke(params: any): Promise<any>;
+  validate(params: any): boolean;
+}
+
+class ToolRegistry {
+  private tools: Map<string, Tool> = new Map();
+  
+  registerTool(tool: Tool): void {
+    this.validateTool(tool);
+    this.tools.set(tool.name, tool);
+  }
+  
+  async invokeTool(name: string, params: any): Promise<any> {
+    const tool = this.tools.get(name);
+    if (!tool) throw new ComposerError(`Tool not found: ${name}`);
+    if (!tool.validate(params)) throw new ComposerError(`Invalid params for tool: ${name}`);
+    return await tool.invoke(params);
+  }
+}
+```
+
+### 2. Pattern Integration
+```typescript
+interface PatternRegistry {
+  register(pattern: Pattern): void;
+  get(name: string): Pattern;
+  list(): Pattern[];
+}
+
+class WorkflowRegistry implements PatternRegistry {
+  private patterns: Map<string, Pattern> = new Map();
+  
+  register(pattern: Pattern): void {
+    this.validatePattern(pattern);
+    this.patterns.set(pattern.name, pattern);
+  }
+  
+  compose(patterns: string[]): CompositePattern {
+    return new CompositePattern(
+      patterns.map(name => this.get(name))
+    );
+  }
+}
+```
+
+## Review Process
+
+### 1. Implementation Review
+- Verify pattern implementations
+- Check error handling
+- Validate security measures
+- Review performance metrics
+
+### 2. Documentation Review
+- Update architecture diagrams
+- Review pattern documentation
+- Validate example code
+- Check integration guides
+
+### 3. Testing Review
+- Run unit tests
+- Execute integration tests
+- Perform security scans
+- Measure performance
+
+## Changelog
+
+### 2024-02-10
+- Initial release of composer agent standards
+- Added comprehensive pattern implementations
+- Included security requirements
+- Added testing guidelines 
