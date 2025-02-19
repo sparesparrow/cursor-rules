@@ -1,0 +1,80 @@
+{
+    "name": "cursor-audio-notifications",
+    "displayName": "Cursor Audio Notifications",
+    "description": "Interactive audio notifications for Cursor IDE",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:audio-notifications.showAlert",
+        "onCommand:audio-notifications.toggleSound"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "audio-notifications.showAlert",
+                "title": "Show Audio Notification"
+            },
+            {
+                "command": "audio-notifications.toggleSound",
+                "title": "Toggle Audio Notifications"
+            }
+        ],
+        "configuration": {
+            "title": "Audio Notifications",
+            "properties": {
+                "audioNotifications.soundEnabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable or disable sound notifications"
+                },
+                "audioNotifications.notifyOnBuildComplete": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Play sound when build completes"
+                },
+                "audioNotifications.notifyOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Play sound when files are saved"
+                },
+                "audioNotifications.notifyOnDebugComplete": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Play sound when debug session ends"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "tsc -p ./tsconfig.test.json",
+        "test": "node ./out/test/runTest.js",
+        "lint": "eslint src --ext ts"
+    },
+    "devDependencies": {
+        "@types/glob": "^8.1.0",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "^16.18.126",
+        "@types/sinon": "^10.0.15",
+        "@types/vscode": "^1.97.0",
+        "@typescript-eslint/eslint-plugin": "^5.30.0",
+        "@typescript-eslint/parser": "^5.30.0",
+        "eslint": "^8.13.0",
+        "glob": "^8.1.0",
+        "mocha": "^10.2.0",
+        "sinon": "^15.1.0",
+        "typescript": "^4.7.2",
+        "vscode-test": "^1.6.1"
+    },
+    "dependencies": {
+        "play-sound": "^1.1.5"
+    }
+} 
